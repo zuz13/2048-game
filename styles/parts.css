@@ -1,0 +1,20 @@
+[data="0"]{
+    background-color: #cdc1b5;
+    box-shadow: inset 1px 1px 0 #a39b91,inset 1px 1px  0 rgba(0,0,0,.1);
+    border-radius: 7px;
+}
+[data="2"]{
+    background-color: #eee4da;
+    box-shadow: inset 1px 1px 0 #eee4da,inset 1px 1px  0 rgba(0,0,0,.1);
+    border-radius: 7px;
+}
+[data="4"]{
+    background-color: #ece0ca;
+    box-shadow: inset 1px 1px 0 #ece0ca,inset 1px 1px  0 rgba(0,0,0,.1);
+    border-radius: 7px;
+}
+[data="8"]{
+    background-color: #e8b482;
+    box-shadow: inset 1px 1px 0 #e8b482,inset 1px 1px  0 rgba(0,0,0,.1);
+    border-radius: 7px;
+}

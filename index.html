@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles/style.css">
+        <link rel="stylesheet" href="styles/parts.css">
+        <link rel="stylesheet" href="styles/responsive.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Lobster&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+        <title>2048</title>
+    </head>
+    <body>
+        <section class="information">
+            <div class="information-title">
+                <p>2048</p>
+            </div>
+
+            <div class="containerOfInformation">
+                <div class="information-score"><p id="information-score">Score:2000</p></div>
+                <div class="information-best_score"><p id="information-best_score">Best:79.3k</p></div>
+            </div>
+
+            <div class="containerOfButton">
+                <div class="information-button" id="information-buttonNew"><p>New</p></div>
+                <div class="information-button" id="information-buttonUndo"><p>Undo</p></div>
+            </div>
+            
+            <div class="information-tip"></div>
+           
+        </section>
+        <section class="game">
+            <div class="game-board">
+
+                <div class="center">
+                    <div class="row">
+                        <div class="box" id="box1" data="0"><p id="boxs1"></p></div>
+                        <div class="box" id="box2" data="0"><p id="boxs2"></p></div>
+                        <div class="box" id="box3" data="0"><p id="boxs3"></p></div>
+                        <div class="box" id="box4" data="0"><p id="boxs4"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="box" id="box5" data="0"><p id="boxs5"></p></div>
+                        <div class="box" id="box6" data="0"><p id="boxs6"></p></div>
+                        <div class="box" id="box7" data="0"><p id="boxs7"></p></div>
+                        <div class="box" id="box8" data="0"><p id="boxs8"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="box" id="box9" data="0"><p id="boxs9"></p></div>
+                        <div class="box" id="box10" data="0"><p id="boxs10"></p></div>
+                        <div class="box" id="box11" data="0"><p id="boxs11"></p></div>
+                        <div class="box" id="box12" data="0"><p id="boxs12"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="box" id="box13" data="0"><p id="boxs13"></p></div>
+                        <div class="box" id="box14" data="0"><p id="boxs14"></p></div>
+                        <div class="box" id="box15" data="0"><p id="boxs15"></p></div>
+                        <div class="box" id="box16" data="0"><p id="boxs16"></p></div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- test -->
+        <section>
+            <a href="information.html"> see all information</a>
+        </section>
+
+        <script src="JavaScript/main.js"></script>
+        <script src="JavaScript/movePieces.js"></script>
+        <script src="JavaScript/math.js"></script>
+    </body>
+</html>

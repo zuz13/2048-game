@@ -1,259 +1,150 @@
-// 0  1  2  3
-// 4  5  6  7
-// 8  9 10 11
-//12 13 14 15
+// the functions in this file are used to move the pieces on the board
+// and to handle the arrow keys for moving the pieces
+//this crear the board and the boxes
+// 0 | 1 | 2 | 3
+// 4 | 5 | 6 | 7
+// 8 | 9 | 10| 11
+// 12| 13| 14| 15
+// 
 
-function cleanArray(){
-    for (let index = 0; index < Attributes.length; index++) {
-        if (Attributes[index] === 0) {
-            document.getElementById(`boxs${index+1}`).innerHTML = ``;//${}
-            document.getElementById(boxes[index]).setAttribute('data', 0);
-        }
-        
-    }
-}
+function MovePieces(direction) {
+    // In this function, we will move the pieces on the board
+    switch (direction) {
+        case "up": // Move pieces up
+            console.log('Moving pieces up');
+            // We iterate through the board to find pieces that need to move.
+            // Starting from 'index = 0' ensures we process all potential pieces.
+            for (let index = 0; index < board.length; index++) {
+                // A piece can only move up if it's not empty (0)
+                // and if it's not already in the top row (index < 4).
+                if (board[index] !== 0 && index >= 4) {
+                    let currentPieceValue = board[index]; // Store the value of the piece we're moving
+                    let currentPosition = index;          // This will track the piece's spot as it moves up
 
-function movePieces(address,piece) {
-    switch (address) {
-        case "up":
-            console.log("up movePieces",{piece});
-            cleanArray();
-            calculate("up", piece);
-            document.getElementById(boxes[piece]).setAttribute('data', 0);
-            document.getElementById(`boxs${piece+1}`).innerHTML = ``;//${}
+                    // Use a do...while loop to allow the piece to move multiple steps up the board.
+                    // The loop continues until a 'break' condition is met.
+                    do {
+                        let targetPosition = currentPosition - 4; // Calculate the cell directly above
 
-            document.getElementById(boxes[piece-4]).setAttribute('data',Attributes[piece]);
-            document.getElementById(`boxs${piece-3}`).innerHTML = `${Attributes[piece]}`;
-            Attributes[piece-4]= Attributes[piece];
-            Attributes[piece] = 0;
-            cleanArray();
-        break;
-        case "left":
-            console.log("left movePieces",{piece});
-            cleanArray();
-            calculate("left", piece);
-            document.getElementById(boxes[piece]).setAttribute('data', 0);
-            document.getElementById(`boxs${piece+1}`).innerHTML = ``;//${}
-            document.getElementById(boxes[piece-1]).setAttribute('data',Attributes[piece]);
-            document.getElementById(`boxs${piece}`).innerHTML = `${Attributes[piece]}`;
-            Attributes[piece-1]= Attributes[piece];
-            Attributes[piece] = 0;
-            cleanArray();
-        break;
-        case "down":
-            console.log("Down movePieces",{piece});
-            cleanArray();
-            calculate("down", piece);
-            document.getElementById(boxes[piece]).setAttribute('data', 0);
-            document.getElementById(`boxs${piece+1}`).innerHTML = ``;//${}
-    
-            document.getElementById(boxes[piece+4]).setAttribute('data',Attributes[piece]);
-            document.getElementById(`boxs${piece+5}`).innerHTML = `${Attributes[piece]}`;
-            Attributes[piece+4]= Attributes[piece];
-            Attributes[piece] = 0;
-            cleanArray();
-        break;
-        case "right":
-            console.log("Right movePieces",{piece});
-            cleanArray();
-            calculate("right", piece);
-            document.getElementById(boxes[piece]).setAttribute('data', 0);
-            document.getElementById(`boxs${piece+1}`).innerHTML = ``;
-            
-            document.getElementById(boxes[piece+1]).setAttribute('data',Attributes[piece]);
-            document.getElementById(`boxs${piece+2}`).innerHTML = `${Attributes[piece]}`;
-            Attributes[piece+1]= Attributes[piece];
-            Attributes[piece] = 0;
-            cleanArray();
-        break;
-        default:
-            console.error("Invalid direction");
+                        // Check if moving to the target position would go off the top of the board.
+                        // If it would, the piece can't move further, so we break.
+                        if (targetPosition < 0) {
+                            break;
+                        }
+
+                        // Check if the target position is empty (0).
+                        if (board[targetPosition] === 0) {
+                            // If empty, move the piece:
+                            // 1. Place the piece's value in the new target spot.
+                            // 2. Clear the piece's old spot (set it to 0).
+                            // 3. Update currentPosition to the new spot, so the loop can try to move it further.
+                            board[targetPosition] = currentPieceValue;
+                            document.getElementById(`box${targetPosition}`).setAttribute('data', currentPieceValue);
+                            board[currentPosition] = 0;
+                            document.getElementById(`box${currentPosition}`).setAttribute('data', 0);
+                            currentPosition = targetPosition;
+                            // The loop will now repeat, attempting to move the piece from its new 'currentPosition'.
+                        }
+                        // Check if the target position has a piece with the same value for merging.
+                        else if (board[targetPosition] === currentPieceValue) {
+                            // If values are the same, merge them:
+                            // 1. Double the value in the target spot.
+                            // 2. Clear the piece's old spot (set it to 0).
+                            board[targetPosition] *= 2;
+                            document.getElementById(`box${targetPosition}`).setAttribute('data', board[targetPosition]);
+                            board[currentPosition] = 0;
+                            document.getElementById(`box${currentPosition}`).setAttribute('data', 0);
+                            currentPosition = targetPosition; // Update currentPosition to the merged spot.
+                            // In 2048, a piece can only merge once per move, so we break the loop here.
+                            break;
+                        }
+                        // If the target position is occupied by a different piece (not empty, not same value).
+                        else {
+                            // The piece is blocked and cannot move further up, so we break the loop.
+                            break;
+                        }
+                    } while (true); // Loop indefinitely until one of the 'break' conditions above is met.
+
+                    // Optional: Log the original position and where the piece ended up after moving.
+                    console.log(`Original piece at ${index} potentially moved up to ${currentPosition}`);
+                }
+            }
+            updateTheScreen(); // Update the screen after all pieces have attempted to move
             break;
-    }
-}
 
-function move(address){
-    switch (address) {
-        case "up":
-            for (let index = 0; index < Attributes.length; index++) {
-                if (Attributes[index] != 0){
-                    if (index == 0 || index == 1 || index == 2 || index == 3) { //first column
-                        
-                    }else if (index == 4 || index == 5 || index == 6 || index == 7){//second column
-                        if(Attributes[index-4 ] != 0){
-                            calculate("up", index);
-                            cleanArray();
-                        }else{
-                            movePieces("up",index);
-                            index = 0;
-                        }
-                    }else if (index == 8 || index == 9 || index == 10 || index == 11){//third column
-                        if(Attributes[index-4] != 0){
-                            if (Attributes[index-8] == 0) {
-                                movePieces("up",index-4);
-                                movePieces("up",index);
-                            }else if (Attributes[index] == Attributes[index-4]) {
-                                movePieces("up",index);
-                            }{
-                                // calculate("up", index);
-                            }
-                        }else{
-                            movePieces("up",index);
-                            index = 0;
-                        }
-                    }else if (index == 12 || index == 13 || index == 14 || index == 15){//fourth column
-                        if(Attributes[index-4] != 0){
-                            if (Attributes[index-8] == 0) {
-                                movePieces("up",index-4);
-                                movePieces("up",index);
-                            }else if(Attributes[index] == Attributes[index-4]){
-                                movePieces("up",index);
-                            }else{
-                                calculate("up", index);
-                            }
-                        }else{
-                            movePieces("up",index);
-                            index = 0;
-                        }
-                    }
-                }
-            }
-        break;
+        // You'll add cases for "down", "left", "right" here, following similar logic.
         case "down":
-            for (let index = 0; index < Attributes.length; index++) {
-                if (Attributes[index] != 0){
-                    if (index == 0 || index == 1 || index == 2 || index == 3) { //first column
-                        if(Attributes[index+4] != 0){
-                            if (Attributes[index+8] == 0) {
-                                movePieces("down",index+4);
-                                movePieces("down",index);
-                            }else if(Attributes[index+12] == 0){
-                                movePieces("down",index+8);
-                                movePieces("down",index+4);
-                                movePieces("down",index);
-                            }
-                        }else{
-                            movePieces("down",index);
-                            index = 0;
+            console.log('Moving pieces down');
+            // We iterate through the board to find pieces that need to move.
+            // Starting from 'index = 0' ensures we process all potential pieces.
+            for (let index = 0; index < board.length; index++) {
+                // A piece can only move down if it's not empty (0)
+                // and if it's not already in the btton row (index > 4).
+                if (board[index] !== 0 && index <= 15) {
+                    let currentPieceValue = board[index]; // Store the value of the piece we're moving
+                    let currentPosition = index;          // This will track the piece's spot as it moves down
+
+                    // Use a do...while loop to allow the piece to move multiple steps down the board.
+                    // The loop continues until a 'break' condition is met.
+                    do {
+                        let targetPosition = currentPosition + 4; // Calculate the cell directly above
+
+                        // Check if moving to the target position would go off the top of the board.
+                        // If it would, the piece can't move further, so we break.
+                        if (targetPosition > 15) {
+                            break;
                         }
-                    }else if (index == 4 || index == 5 || index == 6 || index == 7){//second column
-                        if(Attributes[index+4] != 0){
-                            if (Attributes[index+8] == 0) {
-                                movePieces("down",index+4);
-                                movePieces("down",index);
-                            }
-                        }else{
-                            movePieces("down",index);
-                            index = 0;
+
+                        // Check if the target position is empty (0).
+                        if (board[targetPosition] === 0) {
+                            // If empty, move the piece:
+                            // 1. Place the piece's value in the new target spot.
+                            // 2. Clear the piece's old spot (set it to 0).
+                            // 3. Update currentPosition to the new spot, so the loop can try to move it further.
+                            board[targetPosition] = currentPieceValue;
+                            document.getElementById(`box${targetPosition}`).setAttribute('data', currentPieceValue);
+                            board[currentPosition] = 0;
+                            document.getElementById(`box${currentPosition}`).setAttribute('data', 0);
+                            currentPosition = targetPosition;
+                            // The loop will now repeat, attempting to move the piece from its new 'currentPosition'.
                         }
-                    }else if (index == 8 || index == 9 || index == 10 || index == 11){//third column
-                        if(Attributes[index+4] != 0){
-                            calculate("down", index);
-                            cleanArray();
-                        }else{
-                            movePieces("down",index);
-                            index = 0;
+                        // Check if the target position has a piece with the same value for merging.
+                        else if (board[targetPosition] === currentPieceValue) {
+                            // If values are the same, merge them:
+                            // 1. Double the value in the target spot.
+                            // 2. Clear the piece's old spot (set it to 0).
+                            board[targetPosition] *= 2;
+                            document.getElementById(`box${targetPosition}`).setAttribute('data', board[targetPosition]);
+                            board[currentPosition] = 0;
+                            document.getElementById(`box${currentPosition}`).setAttribute('data', 0);
+                            currentPosition = targetPosition; // Update currentPosition to the merged spot.
+                            // In 2048, a piece can only merge once per move, so we break the loop here.
+                            break;
                         }
-                    }else if (index == 12 || index == 13 || index == 14 || index == 15){//fourth column
-                       
-                    }
+                        // If the target position is occupied by a different piece (not empty, not same value).
+                        else {
+                            // The piece is blocked and cannot move further up, so we break the loop.
+                            break;
+                        }
+                    } while (true); // Loop indefinitely until one of the 'break' conditions above is met.
+
+                    // Optional: Log the original position and where the piece ended up after moving.
+                    console.log(`Original piece at ${index} potentially moved up to ${currentPosition}`);
                 }
             }
+            updateTheScreen(); // Update the screen after all pieces have attempted to move
         break;
-        case  "left":
+        // case "left":
+        //     // ...
+        //     break;
+        // case "right":
+        //     // ...
+        //     break;
 
-        for (let index = 0; index < Attributes.length; index++) {
-            if (Attributes[index] != 0){
-                if (index == 0 || index == 4 || index == 8 || index == 12) { //first column
-                    
-                }else if (index == 1 || index == 5 || index == 9 || index == 13){//second column
-                    if(Attributes[index-1] != 0){
-                        calculate("left", index);
-                        cleanArray();
-                    }else{
-                        movePieces("left",index);
-                        index = 0;
-                    }
-                }else if (index == 2 || index == 6 || index == 10 || index == 14){//third column
-                    if(Attributes[index-1] != 0){
-                        if (Attributes[index-2] == 0) {
-                            movePieces("left",index-1);
-                            movePieces("left",index);
-                        }else{//here
-                            calculate("left",index)
-                        }
-                    }else{
-                        movePieces("left",index);
-                        index = 0;
-                    }
-                }else if (index == 3 || index == 7 || index == 11 || index == 15){//fourth column
-                    if(Attributes[index-1] != 0){
-                        if (Attributes[index-2] == 0) {
-                            movePieces("left",index-1);
-                            movePieces("left",index);
-                        }else if(Attributes[index-3] == 0){
-                            movePieces("left",index-2);
-                            movePieces("left",index-1);
-                            movePieces("left",index);
-                        }
-                    }else{
-                        movePieces("left",index);
-                        index = 0;
-                    }
-                }
-            }
-        }
-
-        break;
-        case  "right":
-
-        for (let index = 0; index < Attributes.length; index++) {
-            if (Attributes[index] != 0){
-                if (index == 0 || index == 4 || index == 8 || index == 12) { //first column
-                    if(Attributes[index+1] != 0){
-                        if (Attributes[index+2] == 0) {
-                            movePieces("right",index+1);
-                            movePieces("right",index);
-                        }else if(Attributes[index+3] == 0){
-                            movePieces("right",index+2);
-                            movePieces("right",index+1);
-                            movePieces("right",index);
-                        }
-                    }else{
-                        movePieces("right",index);
-                        index = 0;
-                    }
-                }else if (index == 1 || index == 5 || index == 9 || index == 13){//second column
-                    if(Attributes[index+1] != 0){
-                        if (Attributes[index+2] == 0) {
-                            movePieces("right",index+1);
-                            movePieces("right",index);
-                        }else if (Attributes[index+2] == Attributes[index+1]) {
-                            calculate('right',index)
-                            movePieces('right',index);
-                        }
-                    }else{
-                        movePieces("right",index);
-                        index = 0;
-                    }
-                }else if (index == 2 || index == 6 || index == 10 || index == 14){//third column
-                    if(Attributes[index+1] != 0){
-                        calculate("right", index);
-                    }else{
-                        movePieces("right",index);
-                        cleanArray();
-                        index = 0;
-                    }
-                }else if (index == 3 || index == 7 || index == 11 || index == 15){//fourth column
-                    
-                }
-            }
-        }
-
-        break;
         default:
-            console.error("Invalid direction");
-        break;
+            // This case handles any unexpected direction values.
+            console.warn("Invalid direction provided to MovePieces:", direction);
+            break;
     }
 }
 
@@ -262,31 +153,19 @@ function handleArrowKeys(event) {
     switch (event.key) {
       case 'ArrowUp':
         console.log('ArrowUp');
-        move("up");
-        newBox();
-        newBox();
-        cleanArray();
+        MovePieces("up");
         break;
       case 'ArrowDown':
         console.log('ArrowDown');
-        move("down");
-        newBox();
-        newBox();
-        cleanArray();
+        MovePieces("down");
         break;
       case 'ArrowLeft':
         console.log('ArrowLeft');
-        move("left");
-        newBox();
-        newBox();
-        cleanArray();
+        MovePieces("left");
         break;
       case 'ArrowRight':
         console.log('ArrowRight');
-        move("right");
-        newBox();
-        newBox();
-        cleanArray();
+        MovePieces("right");
         break;
       default:
         // don't do  anything for other key types
